@@ -24,6 +24,18 @@ def get_appointment(appointment_id: int, db: Session = Depends(get_db)):
 def list_appointments(db: Session = Depends(get_db)):
     return db.query(models.Appointment).all()
 
+# Update a appointment's information
+@router.put("/{appointment_id}", response_model=schemas.AppointmentResponse)
+def update_appointment(appointment_id: int, updated_appointment: schemas.AppointmentCreate, db: Session = Depends(get_db)):
+    appointment = db.query(models.Appointment).filter(models.Appointment.id == appointment_id).first()
+    if not appointment:
+        raise HTTPException(status_code=404, detail="Appointment not found")
+    for key, value in updated_appointment.dict().items():
+        setattr(appointment, key, value)
+    db.commit()
+    db.refresh(appointment)
+    return appointment
+
 @router.delete("/{appointment_id}", status_code=204)
 def delete_appointment(appointment_id: int, db: Session = Depends(get_db)):
     appointment = db.query(models.Appointment).filter(models.Appointment.id == appointment_id).first()

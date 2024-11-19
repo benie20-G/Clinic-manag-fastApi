@@ -1,22 +1,36 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Text, DateTime
+from sqlalchemy import Column,Boolean, Integer, String, ForeignKey, Text, DateTime,CheckConstraint
 from sqlalchemy.orm import relationship
 from app.database import Base
+from sqlalchemy import Enum
+import enum
+
+
+# class GenderEnum(enum.Enum):
+#     male = "male"
+#     female = "female" 
 
 class Patient(Base):
     __tablename__ = 'patients'
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(100), nullable=False)
+    date_of_birth =Column(DateTime,nullable=False)
+    email = Column(String(100),nullable=False, unique=True)
+    gender = Column(String, nullable=False)
     address = Column(String(255), default='Not Provided')
     phone = Column(String(20), nullable=False)
 
     appointments = relationship("Appointment", back_populates="patient")
-
+    __table_args__ = (
+        CheckConstraint("gender IN ('male', 'female')", name="check_gender"),
+    )
 
 class Doctor(Base):
     __tablename__ = 'doctors'
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(100), nullable=False)
     specialty = Column(String(100), nullable=False)
+    email = Column(String(100),nullable=False,unique=True)
+    contact_number = Column(String(100),unique=True)
 
     appointments = relationship("Appointment", back_populates="doctor")
 
@@ -38,6 +52,7 @@ class Billing(Base):
     id = Column(Integer, primary_key=True, index=True)
     appointment_id = Column(Integer, ForeignKey('appointments.id'), nullable=False)
     amount = Column(Integer, nullable=False)
+    is_paid = Column(Boolean,default=False)
 
     appointment = relationship("Appointment")
 

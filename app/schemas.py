@@ -59,3 +59,18 @@ class BillingResponse(BillingBase):
 
     class Config:
         from_attribute = True
+
+
+class MedicalRecordBase(BaseModel):
+    diagnosis: str
+    treatment: str
+
+class MedicalRecordCreate(MedicalRecordBase):
+    appointment_id: int
+
+class MedicalRecordResponse(MedicalRecordBase):
+    id: int
+    appointment_id: int
+
+    class Config:
+        from_attributes = True

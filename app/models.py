@@ -31,7 +31,7 @@ class Appointment(Base):
 
     patient = relationship("Patient", back_populates="appointments")
     doctor = relationship("Doctor", back_populates="appointments")
-
+    medical_record = relationship("MedicalRecord", uselist=False, back_populates="appointment")
 
 class Billing(Base):
     __tablename__ = 'billings'
@@ -40,3 +40,14 @@ class Billing(Base):
     amount = Column(Integer, nullable=False)
 
     appointment = relationship("Appointment")
+
+class MedicalRecord(Base):
+    __tablename__ = "medical_records"
+
+    id = Column(Integer, primary_key=True, index=True)
+    appointment_id = Column(Integer, ForeignKey("appointments.id", ondelete="CASCADE"))
+    diagnosis = Column(Text, nullable=False)
+    treatment = Column(Text, nullable=False)
+
+    # Relationship to the Appointment model
+    appointment = relationship("Appointment", back_populates="medical_record")

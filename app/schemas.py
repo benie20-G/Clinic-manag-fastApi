@@ -1,6 +1,13 @@
 from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional, List
+from enum import Enum
+
+
+
+# class GenderEnum(str, Enum):  # Use str to support JSON serialization
+#     male = "male"
+#     female = "female"
 
 class PatientBase(BaseModel):
     name: str

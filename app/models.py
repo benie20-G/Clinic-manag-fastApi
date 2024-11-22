@@ -15,7 +15,7 @@ class Patient(Base):
     name = Column(String(100), nullable=False)
     date_of_birth =Column(DateTime,nullable=False)
     email = Column(String(100),nullable=False, unique=True)
-    gender = Column(String, nullable=False)
+    gender = Column(String(100), nullable=False)
     address = Column(String(255), default='Not Provided')
     phone = Column(String(20), nullable=False)
 
